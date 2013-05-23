@@ -10,6 +10,16 @@ class DataController():
                 content.append(line)
         return content
 
+    def _cal_average_utilization(self, utilization_content):
+        content = utilization_content[1:]
+        amount = 0
+        util_summary = 0
+        for data in content:
+            utilization = float(data[1])
+            util_summary = util_summary + utilization
+            amount += 1
+        return util_summary/amount, amount
+
     job_arrival_contents = _load_array_of_content([], 'd:/test/job_arrival.xls')
     job_queue_contents = _load_array_of_content([], 'd:/test/job_q.xls')
 
@@ -42,6 +52,7 @@ class DataController():
     revenue_contents[0][1] = 'revenue'
 
     with open('d:/test/summary.xls', 'w') as little_field_summary:
+        # merge content to summary.xls
         for index in range(len(job_arrival_contents)):
             #assume that the date is all the same
             little_field_summary.write(job_arrival_contents[index][0])  #date
@@ -77,5 +88,14 @@ class DataController():
 
             little_field_summary.write('\n')
 
+        avg_util_1, working_1_day = _cal_average_utilization([], station_1_utilization_contents)
+        little_field_summary.write('AVG S1 is %s for %s days' % (avg_util_1, working_1_day))
+        little_field_summary.write('\n')
+        avg_util_2, working_2_day = _cal_average_utilization([], station_2_utilization_contents)
+        little_field_summary.write('AVG S2 is %s for %s days' % (avg_util_2, working_2_day))
+        little_field_summary.write('\n')
+        avg_util_3, working_3_day = _cal_average_utilization([], station_3_utilization_contents)
+        little_field_summary.write('AVG S3 is %s for %s days' % (avg_util_3, working_3_day))
+        little_field_summary.write('\n')
 
 
