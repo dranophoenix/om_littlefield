@@ -20,12 +20,32 @@ class DataController():
     station_3_queue_contents = _load_array_of_content([], 'd:/test/s3q.xls')
     station_3_utilization_contents = _load_array_of_content([], 'd:/test/s3u.xls')
 
+    station_1_queue_contents[0][1] = 'S1Q'
+    station_2_queue_contents[0][1] = 'S2Q'
+    station_3_queue_contents[0][1] = 'S3Q'
+    station_1_utilization_contents[0][1] = 'S1U'
+    station_2_utilization_contents[0][1] = 'S2U'
+    station_3_utilization_contents[0][1] = 'S3U'
     with open('d:/test/summary.xls', 'w') as little_field_summary:
         for index in range(len(station_1_queue_contents)):
             little_field_summary.write(station_1_queue_contents[index][0])
             little_field_summary.write('\t')
+
             little_field_summary.write(station_1_queue_contents[index][1])
-            
+            little_field_summary.write('\t')
+            little_field_summary.write(station_1_utilization_contents[index][1])
+            little_field_summary.write('\t')
+
+            little_field_summary.write(station_2_queue_contents[index][1])
+            little_field_summary.write('\t')
+            little_field_summary.write(station_2_utilization_contents[index][1])
+            little_field_summary.write('\t')
+
+            little_field_summary.write(station_3_queue_contents[index][1])
+            little_field_summary.write('\t')
+            little_field_summary.write(station_3_utilization_contents[index][1])
+            little_field_summary.write('\t')
+
             little_field_summary.write('\n')
 
 
