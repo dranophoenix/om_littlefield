@@ -53,21 +53,36 @@ class DataController():
     revenue_contents = revenue_contents[1:] #remove header
     revenue_contents[0][1] = 'revenue'
 
-    all_queue_is_empty_date = None
+    empty_queue_dates = []
     #def _cal_maximum_capaity_of_each_station(self):
     for s1 in reversed(station_1_queue_contents):
-        if all_queue_is_empty_date:
-            break
         if s1[1] == '0':
             for s2 in station_2_queue_contents:
-                if all_queue_is_empty_date:
-                    break
                 if s2[0] == s1[0]:
-                    for s3 in station_3_queue_contents:
-                        if s3[0] == s2[0]:
-                            all_queue_is_empty_date = s3[0]
-                            break
-    print all_queue_is_empty_date
+                    if s2[1] == '0':
+                        for s3 in station_3_queue_contents:
+                            if s3[0] == s2[0]:
+                                if s3[1] == '0':
+                                    empty_queue_dates.append(s3[0])
+
+    def _calculate_maximum_capacity(self, station_utilization_contents, empty_queue_dates, complete_job_contents):
+        max_capacities = []
+        for empty_queue_date in empty_queue_dates:
+            for station in station_utilization_contents:
+                if station[0] == empty_queue_date:
+                    for completed_job in complete_job_contents:
+                        if completed_job[0] == empty_queue_date:
+                            kit_amount = int(completed_job[1]) * 60
+                            try:
+                                maximum_capacity = kit_amount/float(station[1])
+                            except ZeroDivisionError:
+                                maximum_capacity = 'no work'
+                            max_capacities.append([empty_queue_date, maximum_capacity])
+        return max_capacities
+
+    empty_queue_capa_1 = _calculate_maximum_capacity([], station_1_utilization_contents, empty_queue_dates, complete_job_contents)
+    empty_queue_capa_2 = _calculate_maximum_capacity([], station_2_utilization_contents, empty_queue_dates, complete_job_contents)
+    empty_queue_capa_3 = _calculate_maximum_capacity([], station_3_utilization_contents, empty_queue_dates, complete_job_contents)
 
     with open('d:/test/summary.xls', 'w') as little_field_summary:
         # merge content to summary.xls
@@ -124,4 +139,16 @@ class DataController():
             avg_value_1, working_1_day = _cal_average_value([], lead_time_contents, i * 10)
             little_field_summary.write('AVG lead-time is %s for last %s days' % (avg_value_1, working_1_day))
             little_field_summary.write('\n')
+            little_field_summary.write('\n')
+
+        little_field_summary.write('date\tS1\tS2\tS3')
+        little_field_summary.write('\n')
+        for index, date in enumerate(empty_queue_dates):
+            little_field_summary.write(date)
+            little_field_summary.write('\t')
+            little_field_summary.write(str(empty_queue_capa_1[index][1]))
+            little_field_summary.write('\t')
+            little_field_summary.write(str(empty_queue_capa_2[index][1]))
+            little_field_summary.write('\t')
+            little_field_summary.write(str(empty_queue_capa_3[index][1]))
             little_field_summary.write('\n')
