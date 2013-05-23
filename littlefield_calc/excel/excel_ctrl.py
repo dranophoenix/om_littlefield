@@ -10,14 +10,16 @@ class DataController():
                 content.append(line)
         return content
 
-    def _cal_average_utilization(self, utilization_content):
+    def _cal_average_utilization(self, utilization_content, days_ago):
         content = utilization_content[1:]
         amount = 0
         util_summary = 0
-        for data in content:
+        for data in reversed(content):
             utilization = float(data[1])
             util_summary = util_summary + utilization
             amount += 1
+            if amount == days_ago:
+                break
         return util_summary/amount, amount
 
     job_arrival_contents = _load_array_of_content([], 'd:/test/job_arrival.xls')
@@ -50,6 +52,22 @@ class DataController():
     lead_time_contents[0][1] = 'lead time'
     revenue_contents = revenue_contents[1:] #remove header
     revenue_contents[0][1] = 'revenue'
+
+    all_queue_is_empty_date = None
+    #def _cal_maximum_capaity_of_each_station(self):
+    for s1 in reversed(station_1_queue_contents):
+        if all_queue_is_empty_date:
+            break
+        if s1[1] == '0':
+            for s2 in station_2_queue_contents:
+                if all_queue_is_empty_date:
+                    break
+                if s2[0] == s1[0]:
+                    for s3 in station_3_queue_contents:
+                        if s3[0] == s2[0]:
+                            all_queue_is_empty_date = s3[0]
+                            break
+    print all_queue_is_empty_date
 
     with open('d:/test/summary.xls', 'w') as little_field_summary:
         # merge content to summary.xls
@@ -88,14 +106,14 @@ class DataController():
 
             little_field_summary.write('\n')
 
-        avg_util_1, working_1_day = _cal_average_utilization([], station_1_utilization_contents)
-        little_field_summary.write('AVG S1 is %s for %s days' % (avg_util_1, working_1_day))
-        little_field_summary.write('\n')
-        avg_util_2, working_2_day = _cal_average_utilization([], station_2_utilization_contents)
-        little_field_summary.write('AVG S2 is %s for %s days' % (avg_util_2, working_2_day))
-        little_field_summary.write('\n')
-        avg_util_3, working_3_day = _cal_average_utilization([], station_3_utilization_contents)
-        little_field_summary.write('AVG S3 is %s for %s days' % (avg_util_3, working_3_day))
-        little_field_summary.write('\n')
-
-
+        for i in range(5):
+            avg_util_1, working_1_day = _cal_average_utilization([], station_1_utilization_contents, i * 10)
+            little_field_summary.write('AVG S1 is %s for last %s days' % (avg_util_1, working_1_day))
+            little_field_summary.write('\n')
+            avg_util_2, working_2_day = _cal_average_utilization([], station_2_utilization_contents, i * 10)
+            little_field_summary.write('AVG S2 is %s for last %s days' % (avg_util_2, working_2_day))
+            little_field_summary.write('\n')
+            avg_util_3, working_3_day = _cal_average_utilization([], station_3_utilization_contents, i * 10)
+            little_field_summary.write('AVG S3 is %s for last %s days' % (avg_util_3, working_3_day))
+            little_field_summary.write('\n')
+            little_field_summary.write('\n')
