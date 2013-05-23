@@ -10,17 +10,17 @@ class DataController():
                 content.append(line)
         return content
 
-    def _cal_average_utilization(self, utilization_content, days_ago):
-        content = utilization_content[1:]
+    def _cal_average_value(self, contents, days_ago):
+        content = contents[1:]
         amount = 0
-        util_summary = 0
+        value_summary = 0
         for data in reversed(content):
-            utilization = float(data[1])
-            util_summary = util_summary + utilization
+            value = float(data[1])
+            value_summary += value
             amount += 1
             if amount == days_ago:
                 break
-        return util_summary/amount, amount
+        return value_summary/amount, amount
 
     job_arrival_contents = _load_array_of_content([], 'd:/test/job_arrival.xls')
     job_queue_contents = _load_array_of_content([], 'd:/test/job_q.xls')
@@ -107,13 +107,21 @@ class DataController():
             little_field_summary.write('\n')
 
         for i in range(5):
-            avg_util_1, working_1_day = _cal_average_utilization([], station_1_utilization_contents, i * 10)
+            i += 1
+            avg_util_1, working_1_day = _cal_average_value([], station_1_utilization_contents, i * 10)
             little_field_summary.write('AVG S1 is %s for last %s days' % (avg_util_1, working_1_day))
             little_field_summary.write('\n')
-            avg_util_2, working_2_day = _cal_average_utilization([], station_2_utilization_contents, i * 10)
+            avg_util_2, working_2_day = _cal_average_value([], station_2_utilization_contents, i * 10)
             little_field_summary.write('AVG S2 is %s for last %s days' % (avg_util_2, working_2_day))
             little_field_summary.write('\n')
-            avg_util_3, working_3_day = _cal_average_utilization([], station_3_utilization_contents, i * 10)
+            avg_util_3, working_3_day = _cal_average_value([], station_3_utilization_contents, i * 10)
             little_field_summary.write('AVG S3 is %s for last %s days' % (avg_util_3, working_3_day))
+            little_field_summary.write('\n')
+            little_field_summary.write('\n')
+
+        for i in range(5):
+            i += 1
+            avg_value_1, working_1_day = _cal_average_value([], lead_time_contents, i * 10)
+            little_field_summary.write('AVG lead-time is %s for last %s days' % (avg_value_1, working_1_day))
             little_field_summary.write('\n')
             little_field_summary.write('\n')
