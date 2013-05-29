@@ -124,20 +124,34 @@ class DataController():
         for i in range(5):
             i += 1
             avg_util_1, working_1_day = _cal_average_value([], station_1_utilization_contents, i * 10)
-            little_field_summary.write('AVG S1 is %s for last %s days' % (avg_util_1, working_1_day))
+            little_field_summary.write('AVG s1u for last %s days' % (working_1_day))
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % avg_util_1)
             little_field_summary.write('\n')
             avg_util_2, working_2_day = _cal_average_value([], station_2_utilization_contents, i * 10)
-            little_field_summary.write('AVG S2 is %s for last %s days' % (avg_util_2, working_2_day))
+            little_field_summary.write('AVG s2u for last %s days' % (working_2_day))
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % avg_util_2)
             little_field_summary.write('\n')
             avg_util_3, working_3_day = _cal_average_value([], station_3_utilization_contents, i * 10)
-            little_field_summary.write('AVG S3 is %s for last %s days' % (avg_util_3, working_3_day))
+            little_field_summary.write('AVG s3u for last %s days' % (working_3_day))
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % avg_util_3)
+            little_field_summary.write('\n')
+            little_field_summary.write('%s' % avg_util_1)
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % avg_util_2)
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % avg_util_3)
             little_field_summary.write('\n')
             little_field_summary.write('\n')
 
         for i in range(5):
             i += 1
             avg_value_1, working_1_day = _cal_average_value([], lead_time_contents, i * 10)
-            little_field_summary.write('AVG lead-time is %s for last %s days' % (avg_value_1, working_1_day))
+            little_field_summary.write('AVG lead-time for last %s days' % (working_1_day))
+            little_field_summary.write('\t')
+            little_field_summary.write('%s' % (avg_value_1))
             little_field_summary.write('\n')
             little_field_summary.write('\n')
 
